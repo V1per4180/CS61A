@@ -5,5 +5,9 @@ def twenty_twenty_four():
     >>> twenty_twenty_four()
     2024
     """
-    return ______
+    return (2*2*2*2*2*2*2*2*2*2*2) - 24
 
+
+if __name__ == "__main__":
+    import doctest
+    doctest.testmod()

@@ -8,7 +8,8 @@ def digit(n, k):
     >>> digit(3579, 10)
     0
     """
-    return ____
+    # 解答：先将 n 右移 k 位（即除以 10 的 k 次方），然后取结果的个位数（即对 10 取模）。
+    return n // (10 ** k) % 10
 
 
 def middle(a, b, c):
@@ -26,7 +27,7 @@ def middle(a, b, c):
     >>> middle(30, 5, 40)
     30
     """
-    return ____
+    return a+b+c-min(a,b,c)-max(a,b,c)
 
 
 def falling(n, k):
@@ -42,6 +43,11 @@ def falling(n, k):
     1
     """
     "*** YOUR CODE HERE ***"
+    res = 1
+    for i in range(k):
+        res *= n
+        n -= 1
+    return res
 
 
 def divisible_by_k(n, k):
@@ -65,6 +71,9 @@ def divisible_by_k(n, k):
     0
     """
     "*** YOUR CODE HERE ***"
+    for i in range(1, n+1):
+        if i%2==0:
+            print(i)
 
 
 def sum_digits(y):
@@ -81,6 +90,11 @@ def sum_digits(y):
     6
     """
     "*** YOUR CODE HERE ***"
+    sum =0
+    while(y!=0):
+        sum += (y%10)
+        y //= 10
+    return sum
 
 
 def double_eights(n):
@@ -99,4 +113,30 @@ def double_eights(n):
     False
     """
     "*** YOUR CODE HERE ***"
+    last_num = 0
+    res = False
+    while n!=0:
+        if last_num==8 and n%10==8:
+            return True
+        last_num = n%10
+        n //= 10
+    return False
 
+
+if __name__ == '__main__':
+    ans1 = digit(3579, 2)
+    print(ans1)
+
+    ans2 = middle(3,5,4)
+    print(ans2)
+
+    ans3 = falling(6,3)
+    print(ans3)
+
+    divisible_by_k(10,2)
+
+    ans4 = sum_digits(4224)
+    print(ans4)
+
+    ans5 = double_eights(2882)
+    print(ans5)
