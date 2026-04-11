@@ -12,10 +12,11 @@ def a_plus_abs_b(a, b):
     >>> a_plus_abs_b(-1, -4)
     3
     """
+    # 解答：如果b小于0，就作差；如果b大于0，就加和
     if b < 0:
-        f = _____
+        f = sub
     else:
-        f = _____
+        f = add
     return f(a, b)
 
 def a_plus_abs_b_syntax_check():
@@ -42,7 +43,8 @@ def two_of_three(i, j, k):
     >>> two_of_three(5, 5, 5)
     50
     """
-    return _____
+    # 解答：三个数字的平方和，减去最大数字的平方即可
+    return i*i + j*j + k*k - max(i,j,k)*max(i,j,k)
 
 def two_of_three_syntax_check():
     """Check that your two_of_three code consists of nothing but a return statement.
@@ -66,6 +68,13 @@ def largest_factor(n):
     1
     """
     "*** YOUR CODE HERE ***"
+    # 解答：从2开始，依次判断每个数是否是n的因数，如果是，就返回n除以这个数的结果
+    for i in range(2,n+1):
+        if i==n:
+            return 1
+        else:
+            if(n/i == n//i):
+                return int(n/i)
 
 
 def hailstone(n):
@@ -88,4 +97,26 @@ def hailstone(n):
     1
     """
     "*** YOUR CODE HERE ***"
+    # 希尔顿序列（也叫冰雹猜想）：一个正整数n，如果它是偶数就除以2，如果它是奇数就乘以3再加1，经过若干次这样的判断，它最终将变成1
+    length=1
+    while n!=1:
+        length += 1
+        if n%2==0:
+            n/=2
+        else:
+            n = n*3+1
+    return length
 
+
+if __name__ == "__main__":
+    ans1 = a_plus_abs_b(2,3)
+    print(ans1)
+
+    ans2 = two_of_three(5,3,1)
+    print(ans2)
+
+    ans3 = largest_factor(80)
+    print(ans3)
+
+    ans4 = hailstone(10)
+    print(ans4)
