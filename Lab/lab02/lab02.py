@@ -14,6 +14,10 @@ def composite_identity(f, g):
     False
     """
     "*** YOUR CODE HERE ***"
+    # 需要返回一个单参数函数，作用是把参数传入里面的f和g后，看函数值是否相等
+    def is_equal(k):
+        return f(g(k))==g(f(k))
+    return is_equal
 
 
 def sum_digits(y):
@@ -60,6 +64,14 @@ def count_cond(condition):
     8
     """
     "*** YOUR CODE HERE ***"
+    # 返回一个单参数N的函数，该函数要根据condition，对1到N满足condition的数字进行计数。condition为双参数，分别是N和i。
+    def count_on_condition(N):
+        count = 0
+        for i in range(1, N+1):
+            if condition(N,i):
+                count += 1
+        return count
+    return count_on_condition
 
 
 def multiple(a, b):
@@ -71,7 +83,16 @@ def multiple(a, b):
     42
     """
     "*** YOUR CODE HERE ***"
+    # 返回最小公倍数
+    if a > b:
+        start = a
+    else:
+        start = b
 
+    while True:
+        if start % a == 0 and start % b == 0:
+            return start
+        start += 1
 
 
 def cycle(f1, f2, f3):
@@ -101,4 +122,24 @@ def cycle(f1, f2, f3):
     19
     """
     "*** YOUR CODE HERE ***"
+    # cycle需要返回一个单参数函数my_cycle，根据其参数n决定需要执行几次add、time、add的操作。my_cycle也返回一个单参数函数，决定了对参数k来执行操作。
+    def cycle_times(t):
+        def cycle_process(k):
+            count = 0
+            res = k
+            while count<t:
+                if count%3==0:
+                    f=f1
+                elif count%3==1:
+                    f=f2
+                else:
+                    f=f3
+                res = f(res)
+                count += 1
+            return res
+        return cycle_process
+    return cycle_times
 
+            
+import doctest
+doctest.testmod()
