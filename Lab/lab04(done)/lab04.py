@@ -7,7 +7,7 @@ def divide(quotients, divisors):
     >>> divide(range(1, 5), range(20, 25))
     {1: [20, 21, 22, 23, 24], 2: [20, 22, 24], 3: [21, 24], 4: [20, 24]}
     """
-    return {____: ____ for ____ in ____}
+    return {q: [d for d in divisors if d % q==0] for q in quotients}
 
 
 def buy(fruits_to_buy, prices, total_amount):
@@ -24,15 +24,19 @@ def buy(fruits_to_buy, prices, total_amount):
     [6 apples][2 kiwis]
     [9 apples][1 kiwi]
     """
+    # 考虑每一次要买多少水果
     def add(fruits, amount, cart):
+        # 如果没有水果了，并且金额也正好为0了，那么就把这个组合打印出来
         if fruits == [] and amount == 0:
             print(cart)
+        # 不然，就选择当前第一个水果，和他的价格
         elif fruits and amount > 0:
             fruit = fruits[0]
-            price = ____
-            for k in ____:
-                # Hint: The display function will help you add fruit to the cart.
-                add(____, ____, ____)
+            price = prices[fruit]
+            # 考虑买0个，1个，2个...直到买的数量*价格超过总金额为止
+            for k in range(1, amount // price + 1):
+                # 买了k个当前水果以后，递归的考虑买剩下的n-1种水果，更改剩余金钱和购物车内容
+                add(fruits[1:], amount - k * price, cart + display(fruit, k))
     add(fruits_to_buy, total_amount, '')
 
 
@@ -52,8 +56,6 @@ def display(fruit, count):
     return '[' + str(count) + ' ' + fruit + ']'
 
 
-
-
 from math import sqrt
 def distance(city_a, city_b):
     """
@@ -67,6 +69,9 @@ def distance(city_a, city_b):
     5.0
     """
     "*** YOUR CODE HERE ***"
+    dist = sqrt((get_lat(city_a)-get_lat(city_b))**2 + (get_lon(city_a)-get_lon(city_b))**2)
+    return dist
+
 
 def closer_city(lat, lon, city_a, city_b):
     """
@@ -84,6 +89,11 @@ def closer_city(lat, lon, city_a, city_b):
     'Bucharest'
     """
     "*** YOUR CODE HERE ***"
+    target = make_city('target', lat, lon)
+    dist_a = distance(target, city_a)
+    dist_b = distance(target, city_b)
+    return get_name(city_a) if dist_a < dist_b else get_name(city_b)
+
 
 def check_city_abstraction():
     """
@@ -172,3 +182,6 @@ def change_abstraction(change):
 
 change_abstraction.changed = False
 
+
+import doctest
+doctest.testmod()
