@@ -12,6 +12,7 @@ def midsem_survey(p):
 
 class VendingMachine:
     """A vending machine that vends some product for some price.
+    售卖机：只售卖某种商品，价格为某个数值，注意还需要设置库存数量。
 
     >>> v = VendingMachine('candy', 10)
     >>> v.vend()
@@ -50,6 +51,10 @@ class VendingMachine:
     def __init__(self, product, price):
         """Set the product and its price, as well as other instance attributes."""
         "*** YOUR CODE HERE ***"
+        self.product = product
+        self.price = price
+        self.stock = 0
+        self.balance = 0
 
     def restock(self, n):
         """Add n to the stock and return a message about the updated stock level.
@@ -57,6 +62,8 @@ class VendingMachine:
         E.g., Current candy stock: 3
         """
         "*** YOUR CODE HERE ***"
+        self.stock += n
+        return 'Current ' + self.product + ' stock: ' + str(self.stock)
 
     def add_funds(self, n):
         """If the machine is out of stock, return a message informing the user to restock
@@ -69,6 +76,12 @@ class VendingMachine:
         E.g., Current balance: $4
         """
         "*** YOUR CODE HERE ***"
+        if self.stock == 0:
+            return 'Nothing left to vend. Please restock. Here is your $' + str(n) + '.'
+        else:
+            self.balance += n
+            return 'Current balance: $' + str(self.balance)
+
 
     def vend(self):
         """Dispense the product if there is sufficient stock and funds and
@@ -82,6 +95,21 @@ class VendingMachine:
               Please add $3 more funds.
         """
         "*** YOUR CODE HERE ***"
+        if self.stock == 0:
+            return 'Nothing left to vend. Please restock.'
+        elif self.balance < self.price:
+            return 'Please add $' + str(self.price - self.balance) + ' more funds.'
+        else:
+            self.stock -= 1
+            self.balance -= self.price
+            if self.balance > 0:
+                change = self.balance
+                self.balance = 0
+                # 如果有找零，先把余额清零，再返回找零金额
+                return 'Here is your ' + self.product + ' and $' + str(change) + ' change.'
+            else:
+                # 如果没有找零，直接返回商品
+                return 'Here is your ' + self.product + '.'
 
 
 def store_digits(n):
@@ -103,8 +131,12 @@ def store_digits(n):
     >>> cleaned = re.sub(r"#.*\\n", '', re.sub(r'"{3}[\s\S]*?"{3}', '', inspect.getsource(store_digits)))
     >>> print("Do not use str or reversed!") if any([r in cleaned for r in ["str", "reversed"]]) else None
     """
-    "*** YOUR CODE HERE ***"
-
+    result = Link(n % 10)
+    n //= 10
+    while n > 0:
+        result = Link(n % 10, result)
+        n //= 10
+    return result
 
 def deep_map_mut(func, s):
     """Mutates a deep link s by replacing each item found with the
@@ -126,6 +158,16 @@ def deep_map_mut(func, s):
     <9 <16> 25 36>
     """
     "*** YOUR CODE HERE ***"
+    if s is Link.empty:
+        return
+    elif isinstance(s.first, Link):
+        # 如果s.first是一个Link对象，递归地对它进行deep_map_mut
+        deep_map_mut(func, s.first)
+    else:
+        # 如果s.first不是一个Link对象，而是一个数值，直接对它进行func操作
+        s.first = func(s.first)
+    # 最后对s.rest进行deep_map_mut
+    deep_map_mut(func, s.rest)
 
 
 def two_list(vals, counts):
@@ -135,6 +177,9 @@ def two_list(vals, counts):
     corresponding element in counts represents the number of this value desired in the
     final linked list. Assume all elements in counts are greater than 0. Assume both
     lists have at least one element.
+    中文: 根据传入的两个列表返回一个链表。假设vals和counts的大小相同。
+        vals中的元素代表值，而counts中对应的元素代表最终链表中所需该值的数量。
+        假设counts中的所有元素都大于0。假设两个列表都有至少一个元素。
     >>> a = [1, 3]
     >>> b = [1, 1]
     >>> c = two_list(a, b)
@@ -147,6 +192,17 @@ def two_list(vals, counts):
     Link(1, Link(1, Link(3, Link(3, Link(2)))))
     """
     "*** YOUR CODE HERE ***"
+    result = Link(vals[0])
+    current = result
+    for i in range(len(vals)):
+        for j in range(counts[i]):
+            if i==0 and j==0:
+                continue
+            else:
+                # 当前val值要重复j次，所以要在当前current节点的rest上创建一个新的Link对象，值为当前val值
+                current.rest = Link(vals[i])
+                current = current.rest
+    return result
 
 
 class Link:
@@ -190,3 +246,7 @@ class Link:
             self = self.rest
         return string + str(self.first) + '>'
 
+
+import doctest
+if __name__ == "__main__":
+    doctest.testmod()
