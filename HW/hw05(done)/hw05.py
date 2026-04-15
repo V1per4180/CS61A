@@ -10,6 +10,15 @@ def hailstone(n):
     1
     """
     "*** YOUR CODE HERE ***"
+    # 如果是偶数就除以2，如果是奇数就乘以3加1，直到n等于1为止
+    for i in range(n):
+        yield int(n)
+        if n%2==0:
+            n = n/2
+        elif n%2==1 and n!=1:
+            n = n*3+1
+    while True:
+        yield 1
 
 
 def merge(a, b):
@@ -31,10 +40,16 @@ def merge(a, b):
     while True:
         if a_val == b_val:
             "*** YOUR CODE HERE ***"
+            yield a_val
+            a_val, b_val = next(a), next(b)
         elif a_val < b_val:
             "*** YOUR CODE HERE ***"
+            yield a_val
+            a_val = next(a)
         else:
             "*** YOUR CODE HERE ***"
+            yield b_val
+            b_val = next(b)
 
 
 def stair_ways(n):
@@ -51,6 +66,15 @@ def stair_ways(n):
     []
     """
     "*** YOUR CODE HERE ***"
+    if n==0:
+        yield []
+    else:
+        # 尝试走1步的情况为stair_ways(n-1)，way是具体的每一种情况
+        for way in stair_ways(n-1):
+            yield [1]+way
+        if n>=2:
+            for way in stair_ways(n-2):
+                yield [2]+way
 
 
 def yield_paths(t, value):
@@ -89,12 +113,12 @@ def yield_paths(t, value):
     [[0, 2], [0, 2, 1, 2]]
     """
     if label(t) == value:
-        yield ____
+        yield [label(t)]
     for b in branches(t):
-        for ____ in ____:
-            yield ____
-
-
+        # 假设能在分支中找到value，那么所有的情况就都在yield_paths(b, value)中，path是每一种情况
+        for path in yield_paths(b, value):
+            yield [label(t)]+path
+            
 
 # Tree Data Abstraction
 
@@ -161,3 +185,7 @@ def copy_tree(t):
     """
     return tree(label(t), [copy_tree(b) for b in branches(t)])
 
+
+import doctest
+if __name__ == "__main__":
+    doctest.testmod()
