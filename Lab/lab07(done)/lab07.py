@@ -40,6 +40,13 @@ class Account:
         """Return the number of years until balance would grow to amount."""
         assert self.balance > 0 and amount > 0 and self.interest > 0
         "*** YOUR CODE HERE ***"
+        # 计算在interest虾，balance增长到amount需要多少年
+        year = 0
+        balance = self.balance
+        while balance < amount:
+            balance += balance * self.interest
+            year += 1
+        return year
 
 
 class FreeChecking(Account):
@@ -70,6 +77,16 @@ class FreeChecking(Account):
     free_withdrawals = 2
 
     "*** YOUR CODE HERE ***"
+    # 每次取钱需要手续费，但是首两次取钱免费
+    # 该类继承了Account，所以可以只改动withdraw方法
+    def withdraw(self, amount):
+        if self.free_withdrawals > 0:
+            # 如果次数还有，就减1次免费次数，然后调用父类withdraw即可
+            self.free_withdrawals -= 1
+            return super().withdraw(amount)
+        else:
+            # 如果没有免费次数了，就需要加上手续费再调用父类withdraw
+            return super().withdraw(amount + self.withdraw_fee)
 
 
 def without(s, i):
@@ -86,6 +103,14 @@ def without(s, i):
     True
     """
     "*** YOUR CODE HERE ***"
+    # 递归，当遍历到i的时候跳过他
+    if s is Link.empty:
+        return s
+    elif i ==0:
+        return s.rest
+    else:
+        # 相当于记录还要遍历i次才跳过
+        return Link(s.first, without(s.rest, i-1))
 
 
 def duplicate_link(s, val):
@@ -105,6 +130,17 @@ def duplicate_link(s, val):
     Link(1, Link(2, Link(2, Link(2, Link(2, Link(3))))))
     """
     "*** YOUR CODE HERE ***"
+    # 注意该函数没有返回值
+    if s is Link.empty:
+        return
+    elif s.first == val:
+        # 如果当前节点的值等于val，在当前节点的rest上创建一个新的Link对象，值为val
+        s.rest = Link(val, s.rest)
+        # 然后继续对s.rest进行duplicate_link
+        duplicate_link(s.rest.rest, val)
+    else:
+        # 如果当前节点的值不等于val，直接对s.rest进行duplicate_link
+        duplicate_link(s.rest, val)
 
 
 class Link:
@@ -148,3 +184,7 @@ class Link:
             self = self.rest
         return string + str(self.first) + '>'
 
+
+import doctest
+if __name__ == "__main__":
+    doctest.testmod()
